@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>فحص صفحة iLOCK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --y:#FFC928; --y-soft:#FFF1C2; --y-ink:#1C1719;
+  --ink:#1C1719; --ink-2:#4A4446; --muted:#77706F;
+  --ground:#EEEDEA; --paper:#FFFFFF; --line:#DCD9D4; --sunk:#F6F5F2;
+  --crit:#C9392A; --crit-bg:#FBE7E4; --warn:#B26A00; --warn-bg:#FDF0DA; --good:#2B7A4B; --good-bg:#E3F2E8;
+  --shadow:0 1px 2px rgba(28,23,25,.06),0 8px 24px -12px rgba(28,23,25,.18);
+  --display:'Readex Pro','IBM Plex Sans Arabic',Tahoma,sans-serif;
+  --body:'IBM Plex Sans Arabic','Readex Pro',Tahoma,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#F3EFE8; --ink-2:#CFC8C0; --muted:#9A928C;
+    --ground:#121011; --paper:#1D191A; --line:#35302F; --sunk:#181516;
+    --y-soft:#3A3014; --crit:#FF7A68; --crit-bg:#3A1C18; --warn:#F2B04A; --warn-bg:#352812; --good:#6FD39A; --good-bg:#16301F;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -14px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#F3EFE8; --ink-2:#CFC8C0; --muted:#9A928C;
+  --ground:#121011; --paper:#1D191A; --line:#35302F; --sunk:#181516;
+  --y-soft:#3A3014; --crit:#FF7A68; --crit-bg:#3A1C18; --warn:#F2B04A; --warn-bg:#352812; --good:#6FD39A; --good-bg:#16301F;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -14px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:16.5px;line-height:1.85;direction:rtl;padding-inline:16px;padding-block:0 64px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin-inline:auto}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.35}
+p{margin:0}
+.ltr{direction:ltr;unicode-bidi:isolate;font-family:var(--mono);font-size:.88em}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--y);outline-offset:3px;border-radius:6px}
+
+/* ---------- hazard stripe (used twice only) ---------- */
+.stripe{height:10px;background:repeating-linear-gradient(-45deg,var(--y) 0 14px,var(--y-ink) 14px 28px);border-radius:3px}
+
+/* ---------- hero ---------- */
+.hero{padding-block:28px 8px}
+.hero .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-block:18px 26px}
+.brand{font-family:var(--display);font-weight:700;letter-spacing:.02em;font-size:15px;display:flex;align-items:center;gap:10px}
+.brand i{display:inline-block;width:12px;height:12px;background:var(--y);border-radius:3px;box-shadow:0 0 0 3px var(--y-soft)}
+.meta{font-size:13px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap}
+.hero-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:28px;align-items:stretch}
+.hero h1{font-size:clamp(34px,5.4vw,60px);font-weight:700;letter-spacing:-.01em}
+.hero h1 mark{background:linear-gradient(transparent 58%,var(--y) 58% 92%,transparent 92%);color:inherit;padding-inline:4px}
+.lede{margin-top:18px;font-size:18px;color:var(--ink-2);max-width:60ch}
+.lede + .lede{margin-top:10px}
+.meter{background:var(--y-ink);color:#F3EFE8;border-radius:22px;padding:22px 22px 18px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}
+.meter .lbl{font-size:12.5px;letter-spacing:.08em;color:#BDB5AC;font-family:var(--display)}
+.meter svg{width:100%;max-width:280px;margin-inline:auto;display:block}
+.meter .score{font-family:var(--display);font-weight:700;font-size:44px;text-align:center;margin-top:-58px;line-height:1}
+.meter .score small{font-size:18px;color:#BDB5AC;font-weight:400}
+.meter .verdict{text-align:center;font-size:14.5px;color:#E6DFD6;margin-top:6px}
+.meter .note{font-size:12px;color:#9E958D;text-align:center}
+
+/* ---------- facts row ---------- */
+.facts{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-top:28px}
+.fact{background:var(--paper);padding:16px 16px 14px}
+.fact b{display:block;font-family:var(--display);font-size:30px;font-weight:600;line-height:1.1}
+.fact span{display:block;font-size:13.5px;color:var(--muted);line-height:1.5;margin-top:6px}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin-top:34px;background:color-mix(in srgb,var(--ground) 86%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin-inline:-16px;padding-inline:16px}
+.nav .in{max-width:1080px;margin-inline:auto;display:flex;gap:6px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
+.nav a{white-space:nowrap;text-decoration:none;font-size:14px;padding:6px 12px;border-radius:999px;color:var(--ink-2);font-family:var(--display)}
+.nav a:hover{background:var(--paper);color:var(--ink)}
+
+/* ---------- sections ---------- */
+section{padding-top:56px;scroll-margin-top:60px}
+.eyebrow{font-family:var(--display);font-size:13px;letter-spacing:.08em;color:var(--muted);display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:22px;height:3px;background:var(--y);border-radius:2px}
+.sec-h{font-size:clamp(26px,3.4vw,36px);font-weight:600;margin-top:8px}
+.sec-p{color:var(--ink-2);margin-top:10px;max-width:66ch}
+
+/* ---------- scorecard ---------- */
+.scores{margin-top:24px;display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.sc{background:var(--paper);border-radius:16px;padding:16px 18px;border:1px solid var(--line)}
+.sc .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.sc h3{font-size:17px;font-weight:600}
+.sc .v{font-family:var(--mono);font-weight:600;font-size:15px}
+.sc .v small{color:var(--muted);font-weight:500}
+.bar{height:8px;background:var(--sunk);border-radius:99px;margin-top:10px;overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;border-radius:99px;background:var(--y-ink)}
+:root[data-theme="dark"] .bar i{background:var(--y)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .bar i{background:var(--y)}}
+.bar i.lo{background:var(--crit)}
+.sc p{font-size:14px;color:var(--muted);margin-top:8px;line-height:1.7}
+
+/* ---------- good ---------- */
+.good{margin-top:24px;display:grid;grid-template-columns:1.25fr 1fr;gap:20px;align-items:start}
+.shot{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--paper);box-shadow:var(--shadow)}
+.shot button{all:unset;display:block;cursor:zoom-in;width:100%}
+.shot img{display:block;width:100%;height:auto}
+.shot figcaption{font-size:13px;color:var(--muted);padding:8px 12px;border-top:1px solid var(--line);line-height:1.6}
+.plus{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.plus li{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start}
+.plus li svg{width:24px;height:24px;margin-top:3px}
+.plus b{font-family:var(--display);font-weight:600;display:block}
+.plus span{font-size:14.5px;color:var(--ink-2)}
+
+/* ---------- findings ---------- */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+.chip{font-family:var(--display);font-size:14px;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:7px 14px;border-radius:999px;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.chip .c{font-family:var(--mono);font-size:12px;background:var(--sunk);border-radius:99px;padding:0 7px}
+.chip[aria-pressed="true"]{background:var(--y-ink);color:#F3EFE8;border-color:var(--y-ink)}
+.chip[aria-pressed="true"] .c{background:var(--y);color:var(--y-ink)}
+.findings{margin-top:18px;display:grid;gap:16px}
+.f{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px 22px;display:grid;grid-template-columns:1fr minmax(0,300px);gap:22px;align-items:start}
+.f.noimg{grid-template-columns:1fr}
+.f[data-sev="crit"]{border-inline-start:5px solid var(--crit)}
+.f[data-sev="imp"]{border-inline-start:5px solid var(--warn)}
+.f[data-sev="nice"]{border-inline-start:5px solid var(--line)}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tag{font-size:12px;font-family:var(--display);padding:2px 10px;border-radius:99px;background:var(--sunk);color:var(--ink-2);border:1px solid var(--line)}
+.tag.crit{background:var(--crit-bg);color:var(--crit);border-color:transparent;font-weight:600}
+.tag.imp{background:var(--warn-bg);color:var(--warn);border-color:transparent;font-weight:600}
+.tag.nice{background:var(--good-bg);color:var(--good);border-color:transparent;font-weight:600}
+.f h3{font-size:20px;font-weight:600}
+.f dl{margin:12px 0 0;display:grid;gap:10px}
+.f dt{font-family:var(--display);font-size:12.5px;letter-spacing:.06em;color:var(--muted)}
+.f dd{margin:2px 0 0;font-size:15.5px;color:var(--ink-2)}
+.f dd ul{margin:4px 0 0;padding-inline-start:20px}
+.f .shots{display:grid;gap:10px}
+.f .shots.two{grid-template-columns:1fr 1fr}
+.effort{margin-top:14px;display:inline-flex;gap:8px;align-items:center;font-size:13.5px;color:var(--ink-2);background:var(--sunk);border-radius:10px;padding:5px 12px;border:1px dashed var(--line)}
+.effort svg{width:16px;height:16px}
+
+/* ---------- before / after ---------- */
+.ba{margin-top:24px;display:grid;gap:22px}
+.pair{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:20px;display:grid;gap:14px}
+.pair h3{font-size:19px;font-weight:600}
+.pair .sides{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.side{display:grid;gap:8px;justify-items:center}
+.side .k{justify-self:start;font-family:var(--display);font-size:12.5px;letter-spacing:.08em;padding:2px 10px;border-radius:99px}
+.side .k.b{background:var(--crit-bg);color:var(--crit)}
+.side .k.a{background:var(--good-bg);color:var(--good)}
+.phone{width:100%;max-width:270px;border-radius:26px;border:8px solid #1C1719;overflow:hidden;background:#fff;color:#1C1719;box-shadow:var(--shadow)}
+.phone img{display:block;width:100%}
+/* the "after" mobile card is drawn in iLOCK's own light palette on purpose */
+.mcard{background:linear-gradient(180deg,#ECECEA 0%,#ECECEA 55%,#FBD867 100%);padding:22px 16px 0;text-align:center;font-family:'Readex Pro',sans-serif}
+.mcard h4{margin:0;font-size:21px;font-weight:600;line-height:1.35}
+.mcard p{font-size:13px;color:#4A4446;margin-top:4px}
+.mcard .cta{display:inline-flex;margin-top:12px;background:#1C1719;color:#FFC928;font-weight:600;font-size:14.5px;padding:10px 22px;border-radius:12px;min-height:44px;align-items:center}
+.mcard img{margin-top:14px;width:100%;mix-blend-mode:multiply}
+.btnrow{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:center;padding:28px 16px;border-radius:14px;width:100%;background:linear-gradient(120deg,#FFD24A,#F7E7B4)}
+.b-old{font-family:'Readex Pro',sans-serif;font-size:15px;color:#1C1719;border:1px solid #1C1719;border-radius:99px;padding:5px 16px}
+.b-new{font-family:'Readex Pro',sans-serif;font-size:16px;font-weight:600;color:#FFC928;background:#1C1719;border-radius:12px;padding:12px 26px;min-height:48px;display:inline-flex;align-items:center;gap:8px}
+.b-sec{font-family:'Readex Pro',sans-serif;font-size:16px;font-weight:600;color:#1C1719;background:rgba(255,255,255,.7);border:1.5px solid #1C1719;border-radius:12px;padding:11px 22px;min-height:48px;display:inline-flex;align-items:center}
+.size{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.trust-new{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%}
+.trust-new div{background:var(--sunk);border:1px solid var(--line);border-radius:12px;padding:12px 8px;text-align:center;font-size:13.5px;font-family:var(--display);display:grid;justify-items:center;gap:6px}
+.trust-new svg{width:26px;height:26px;color:var(--ink)}
+.trust-new div:first-child{background:var(--y);color:#1C1719;border-color:transparent}
+.trust-new div:first-child svg{color:#1C1719}
+.pcards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
+.pc{background:var(--sunk);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:grid}
+.pc .im{background:#ECECEA;aspect-ratio:1;display:grid;place-items:center;max-width:100%}
+.pc .im img{width:86%;mix-blend-mode:multiply}
+.pc .tx{padding:10px 10px 12px;display:grid;gap:4px}
+.pc .tx b{font-family:var(--display);font-size:14px;font-weight:600;line-height:1.4}
+.pc .tx small{color:var(--muted);font-size:12px}
+.pc .pr{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.pc .pr span{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.pc .pr i{width:30px;height:30px;border-radius:9px;background:#1C1719;display:grid;place-items:center}
+.pc .pr i svg{width:16px;height:16px;color:#FFC928}
+.badge{position:absolute;margin:8px;background:#1C1719;color:#FFC928;font-size:11px;font-family:var(--display);padding:1px 8px;border-radius:6px}
+
+/* ---------- table ---------- */
+.tbl{margin-top:22px;overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--paper)}
+table{width:100%;border-collapse:collapse;min-width:640px;font-size:15px}
+th,td{text-align:start;padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.05em;color:var(--muted);background:var(--sunk)}
+tr:last-child td{border-bottom:0}
+td:first-child{font-family:var(--display);font-weight:600;white-space:nowrap}
+td .bad{color:var(--crit)}
+td code{font-family:var(--mono);font-size:13px;background:var(--sunk);padding:1px 6px;border-radius:6px;direction:ltr;unicode-bidi:isolate;display:inline-block}
+
+/* ---------- roadmap ---------- */
+.road{margin-top:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:ph}
+.ph{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px;display:grid;gap:10px;align-content:start;position:relative}
+.ph .n{font-family:var(--display);font-weight:700;font-size:13px;color:var(--y-ink);background:var(--y);width:30px;height:30px;border-radius:9px;display:grid;place-items:center}
+.ph h3{font-size:19px;font-weight:600}
+.ph .t{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.ph ul{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.ph li{display:grid;grid-template-columns:22px 1fr;gap:6px;font-size:14.5px;color:var(--ink-2);line-height:1.6}
+.ph li input{width:17px;height:17px;margin-top:4px;accent-color:#1C1719}
+.ph li label{cursor:pointer}
+.ph li input:checked + label{text-decoration:line-through;color:var(--muted)}
+.ph.first{background:var(--y-ink);color:#F3EFE8;border-color:var(--y-ink)}
+.ph.first li{color:#DCD4CB}
+.ph.first .t{color:#A69D95}
+.ph.first li input{accent-color:#FFC928}
+.ph.first li input:checked + label{color:#8E857E}
+
+/* ---------- outro ---------- */
+.outro{margin-top:56px;background:var(--y);color:var(--y-ink);border-radius:24px;padding:30px 28px;display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:center}
+.outro h2{font-size:clamp(24px,3vw,32px);font-weight:700}
+.outro p{margin-top:10px;font-size:16.5px;color:#3A3133}
+.outro ul{margin:0;padding:0;list-style:none;display:grid;gap:8px;font-size:15px}
+.outro li{background:rgba(255,255,255,.55);border-radius:12px;padding:10px 14px}
+.foot{margin-top:28px;font-size:13px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* ---------- lightbox ---------- */
+dialog{border:0;padding:0;background:transparent;max-width:min(1100px,94vw);max-height:92vh}
+dialog::backdrop{background:rgba(18,16,17,.82)}
+dialog img{display:block;max-width:100%;max-height:86vh;border-radius:12px;margin-inline:auto}
+dialog p{color:#EDE7DF;text-align:center;font-size:14px;margin-top:10px}
+dialog form{text-align:center;margin-top:10px}
+dialog button{font-family:var(--display);background:#FFC928;color:#1C1719;border:0;border-radius:10px;padding:8px 18px;font-size:14px;cursor:pointer}
+
+@media (max-width:860px){
+  .hero-grid,.good,.outro{grid-template-columns:1fr}
+  .facts{grid-template-columns:repeat(2,1fr)}
+  .fact:last-child{grid-column:1/-1}
+  .f{grid-template-columns:1fr}
+  .road{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .scores{grid-template-columns:1fr}
+  .pair .sides{grid-template-columns:1fr}
+  .pcards{grid-template-columns:repeat(2,1fr)}
+  .pcards .pc:nth-child(3){display:none}
+  .trust-new{grid-template-columns:repeat(2,1fr)}
+  .f{padding:18px 16px}
+  .f .shots.two{grid-template-columns:1fr 1fr}
+}
+@media print{
+  @page{size:A4;margin:12mm 10mm}
+  body{padding-inline:0;padding-block:0;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .nav,.filters,dialog,.ph li input{display:none!important}
+  .ph li{grid-template-columns:1fr}
+  .f[hidden]{display:grid!important}
+  .f,.pair,.sc,.ph,.fact,.plus li,.outro,.meter,tr,.shot{break-inside:avoid}
+  section{padding-top:30px}
+  .shot{box-shadow:none}
+  .sec-h,.eyebrow{break-after:avoid}
+  #findings,#ideas,#tech{break-before:page}
+}
+@media (prefers-reduced-motion:no-preference){
+  .bar i{transition:width .9s cubic-bezier(.2,.7,.2,1)}
+  .f{transition:opacity .2s}
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#FFC928"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#1C1719" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24"><path d="M3 6h11v9H3zM14 9h4l3 3v3h-7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="7" cy="17" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17" cy="17" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-cash" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-return" viewBox="0 0 24 24"><path d="M9 7L4 12l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 12h11a5 5 0 010 10h-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 12l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 13H6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 016 0v2" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+</svg>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="stripe" aria-hidden="true"></div>
+  <div class="top">
+    <div class="brand"><i aria-hidden="true"></i>تقرير فحص · الصفحة الرئيسية</div>
+    <div class="meta"><span class="ltr">erp.ilock.eg/ar/home-3</span><span>24 سبتمبر 2026</span><span>كمبيوتر 1440px + موبايل 390px</span></div>
+  </div>
+
+  <div class="hero-grid">
+    <div>
+      <h1>صفحة iLOCK <mark>أساسها قوي</mark>، ومحتاجة شوية تظبيط</h1>
+      <p class="lede">فتحت الصفحة الرئيسية على الكمبيوتر وعلى الموبايل، وقستها بأدوات بسيطة، وكتبت هنا كل حاجة لاحظتها، ومعاها صور من الموقع نفسه.</p>
+      <p class="lede">الأصفر مميز، وصور المنتجات حلوة، والخط العربي نضيف. اللي ناقص حاجات صغيرة لكن الزائر بيشوفها على طول. ده رأيي الشخصي، ولو فيه حاجة معمولة كده لسبب أنا مش عارفه، فأنتم أدرى.</p>
+    </div>
+    <aside class="meter" aria-label="التقييم العام">
+      <div class="lbl">التقييم العام (رأيي)</div>
+      <svg viewBox="0 0 200 116" role="img" aria-label="4.5 من 10">
+        <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="#3A3234" stroke-width="16" stroke-linecap="round"/>
+        <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="#FFC928" stroke-width="16" stroke-linecap="round" pathLength="100" stroke-dasharray="45 100"/>
+        <g font-family="IBM Plex Mono, monospace" font-size="9" fill="#8E857E"><text x="14" y="114">0</text><text x="178" y="114">10</text></g>
+      </svg>
+      <div class="score num">4.5<small> / 10</small></div>
+      <div class="verdict">شغل أغلبه في المحرر، والفرق هيبان بسرعة</div>
+      <div class="note">متوسط الستة جوانب اللي تحت</div>
+    </aside>
+  </div>
+
+  <div class="facts" role="list">
+    <div class="fact" role="listitem"><b class="num">0</b><span>زراير "تسوق الآن" بتودّي لمنتج</span></div>
+    <div class="fact" role="listitem"><b class="num">9 / 21</b><span>قسم مخفي، يعني نسخة للموبايل ونسخة للكمبيوتر</span></div>
+    <div class="fact" role="listitem"><b class="num">25 / 28</b><span>صورة من غير وصف (alt)</span></div>
+    <div class="fact" role="listitem"><b class="num">0</b><span>سعر ظاهر في الصفحة كلها</span></div>
+    <div class="fact" role="listitem"><b class="num">38px</b><span>ارتفاع الزراير، والمريح للصباع 44px أو أكتر</span></div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="أقسام التقرير">
+  <div class="in">
+    <a href="#scores">التقييم</a>
+    <a href="#good">الحلو</a>
+    <a href="#findings">الملاحظات</a>
+    <a href="#ideas">قبل وبعد</a>
+    <a href="#tech">جوجل والتقنية</a>
+    <a href="#plan">نبدأ بإيه</a>
+  </div>
+</nav>
+
+<section id="scores">
+  <div class="eyebrow">التقييم بالتفصيل</div>
+  <h2 class="sec-h">ستة جوانب، كل واحد من 10</h2>
+  <p class="sec-p">الأرقام دي تقديري أنا، مش مقياس رسمي. هدفها بس توضح فين الشغل الأكتر.</p>
+  <div class="scores">
+    <div class="sc"><div class="row"><h3>الشكل والهوية</h3><span class="v">7<small>/10</small></span></div><div class="bar"><i style="width:70%"></i></div><p>اللون والخط والصور شغالين كويس مع بعض. ناقص توحيد الزراير والمسافات.</p></div>
+    <div class="sc"><div class="row"><h3>السرعة</h3><span class="v">7<small>/10</small></span></div><div class="bar"><i style="width:70%"></i></div><p>الصفحة حوالي 1.4 ميجا و41 طلب، وده معقول. أول فتحة كانت أبطأ (أول بايت اتأخر 2.2 ثانية).</p></div>
+    <div class="sc"><div class="row"><h3>الموبايل</h3><span class="v">4<small>/10</small></span></div><div class="bar"><i class="lo" style="width:40%"></i></div><p>الكلام فوق الصور، الفوتر مكرر، ومعظم الزراير مش بتودّي في حتة.</p></div>
+    <div class="sc"><div class="row"><h3>المحتوى والكلام</h3><span class="v">3<small>/10</small></span></div><div class="bar"><i class="lo" style="width:30%"></i></div><p>بيانات تجربة لسه موجودة، ووصف متكرر، وكلام الموبايل غير الكمبيوتر.</p></div>
+    <div class="sc"><div class="row"><h3>البيع والتحويل</h3><span class="v">3<small>/10</small></span></div><div class="bar"><i class="lo" style="width:30%"></i></div><p>مفيش منتج بسعره، و"تسوق الآن" بيودّي لصفحة تواصل معنا.</p></div>
+    <div class="sc"><div class="row"><h3>جوجل (SEO)</h3><span class="v">3<small>/10</small></span></div><div class="bar"><i class="lo" style="width:30%"></i></div><p>اسم الصفحة "Testing"، ومفيش عنوان H1، وأغلب الصور من غير وصف.</p></div>
+  </div>
+</section>
+
+<section id="good">
+  <div class="eyebrow">نبدأ بالحلو</div>
+  <h2 class="sec-h">الحاجات اللي تستاهل تفضل زي ما هي</h2>
+  <div class="good">
+    <figure class="shot"><button type="button" data-zoom="img/hero.jpg" data-cap="البانر على الكمبيوتر"><img src="img/hero.jpg" alt="بانر الصفحة الرئيسية لموقع iLOCK بشاحن 75 واط على خلفية صفرا" loading="lazy"></button><figcaption>البانر على الكمبيوتر: صورة المنتج واللون شغالين مع بعض كويس.</figcaption></figure>
+    <ul class="plus">
+      <li><svg aria-hidden="true"><use href="#i-check"/></svg><div><b>هوية لونية واضحة</b><span>الأصفر مع الأسود بيتعرف على طول، وده مش سهل تلاقيه في سوق الإكسسوارات.</span></div></li>
+      <li><svg aria-hidden="true"><use href="#i-check"/></svg><div><b>صور منتجات بجودة عالية</b><span>الصور معمولة احترافي وخلفيتها متناسقة، وده أغلى حاجة في أي متجر.</span></div></li>
+      <li><svg aria-hidden="true"><use href="#i-check"/></svg><div><b>خط عربي واحد في كل الصفحة</b><span>Lama Sans مقروء وحديث ومش محتاج يتغير.</span></div></li>
+      <li><svg aria-hidden="true"><use href="#i-check"/></svg><div><b>ثقة من أماكن البيع</b><span>وجود B.Tech وجوميا وأمازون ونون بيطمّن الزائر. محتاج بس عرض أهدى.</span></div></li>
+      <li><svg aria-hidden="true"><use href="#i-check"/></svg><div><b>مبني على Odoo</b><span>يعني أغلب التعديلات تتعمل من المحرر من غير برمجة، والسلة موجودة أصلًا.</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section id="findings">
+  <div class="eyebrow">الملاحظات</div>
+  <h2 class="sec-h">17 ملاحظة، مترتبين حسب الأهمية</h2>
+  <p class="sec-p">كل ملاحظة فيها: شفت إيه، وليه مهمة، والحل، والوقت اللي أتوقعه. دوس على أي صورة عشان تكبر.</p>
+
+  <div class="filters" role="group" aria-label="فلترة الملاحظات">
+    <button class="chip" type="button" aria-pressed="true" data-f="all">الكل <span class="c num">17</span></button>
+    <button class="chip" type="button" aria-pressed="false" data-f="crit">عاجل <span class="c num">4</span></button>
+    <button class="chip" type="button" aria-pressed="false" data-f="imp">مهم <span class="c num">6</span></button>
+    <button class="chip" type="button" aria-pressed="false" data-f="nice">تحسين <span class="c num">7</span></button>
+  </div>
+
+  <div class="findings">
+
+    <article class="f" data-sev="crit">
+      <div>
+        <div class="tags"><span class="tag crit">عاجل</span><span class="tag">موبايل</span></div>
+        <h3>الكلام راكب على صور المنتجات في الموبايل</h3>
+        <dl>
+          <dt>شفت إيه</dt><dd>في 5 كروت (الشاحن المزدوج، والكابل 100 واط، والباور بانك، والمشترك شوكو، وموزع الطاقة)، العنوان والوصف والزرار بيقعوا فوق صورة المنتج نفسه.</dd>
+          <dt>ليه مهمة</dt><dd>أغلب زوار المتاجر المصرية بيدخلوا من الموبايل، فده أول انطباع ليهم. والكلام مش بيتقري، والزرار مش باين.</dd>
+          <dt>الحل</dt><dd>في إعدادات كل كارت للموبايل: الكلام فوق والصورة تحته، مش عليه. أو صورة مخصوصة للموبايل فيها مساحة فاضية فوق.</dd>
+        </dl>
+        <span class="effort"><svg aria-hidden="true"><use href="#i-clock"/></svg>حوالي ساعتين</span>
+      </div>
+      <div class="shots two">
+        <figure class="shot"><button type="button" data-zoom="img/mob_overlap1.jpg" data-cap="شاحن مزدوج المنفذ على الموبايل"><img src="img/mob_overlap1.jpg" alt="كارت شاحن مزدوج المنفذ على الموبايل والكلام فوق الصورة" loading="lazy"></button></figure>
+        <figure class="shot"><button type="button" data-zoom="img/mob_overlap2.jpg" data-cap="مشترك كهربائي شوكو على الموبايل"><img src="img/mob_overlap2.jpg" alt="كارت مشترك شوكو على الموبايل والكلام فوق الصورة" loading="lazy"></button></figure>
+      </div>
+    </article>
+
+    <article class="f noimg" data-sev="crit">
+      <div>
+        <div class="tags"><span class="tag crit">عاجل</span><span class="tag">كمبيوتر + موبايل</span><span class="tag">البيع</span></div>
+        <h3>"تسوق الآن" مش بيودّي لأي منتج</h3>
+        <dl>
+          <dt>شفت إيه</dt><dd>
+            <ul>
+              <li>على الكمبيوتر: الـ 10 زراير "تسوق الآن" وزرارين "قريبًا" كلهم بيودّوا على <span class="ltr">/ar/contactus</span>، يعني صفحة "تواصل معنا".</li>
+              <li>على الموبايل: 5 زراير "تسوق الآن" وزرارين "مزيد من التفاصيل" لينكهم <span class="ltr">#</span>، يعني مش بيعملوا حاجة خالص.</li>
+              <li>زرار "معلومات عنا" في قسم DISCOVER لينكه <span class="ltr">#</span> على الجهازين.</li>
+            </ul></dd>
+          <dt>ليه مهمة</dt><dd>ده أقصر طريق للبيع. لو الزائر داس "تسوق الآن" ولقى فورم تواصل أو ولا حاجة حصلت، غالبًا هيقفل الصفحة.</dd>
+          <dt>الحل</dt><dd>كل زرار يودّي على صفحة المنتج أو القسم بتاعه في المتجر (<span class="ltr">/shop/...</span>). و"قريبًا" يتشال منه اللينك، أو يودّي لفورم "بلغني لما ينزل".</dd>
+        </dl>
+        <span class="effort"><svg aria-hidden="true"><use href="#i-clock"/></svg>حوالي ساعة</span>
+      </div>
+    </article>
+
+    <article class="f" data-sev="crit">
+      <div>
+        <div class="tags"><span class="tag crit">عاجل</span><span class="tag">المحتوى</span></div>
+        <h3>بيانات التجربة لسه ظاهرة للناس</h3>
+        <dl>
+          <dt>شفت إيه</dt><dd>
+            <ul>
+              <li>اسم الصفحة في المتصفح وجوجل: <span class="ltr">Home no code | Testing</span>.</li>
+              <li>الوصف البديل (alt) للوجو: <span class="ltr">Testing</span>.</li>
+              <li>في المنيو: "الصفحة الرئيسية بدون كود".</li>
+              <li>الإيميل <span class="ltr">info@yourcompany.example.com</span> والتليفون <span class="ltr">+1 555-555-5556</span>.</li>
+              <li>كلام "معلومات عنا" في الفوتر هو النص الجاهز بتاع Odoo عن "الشركات الصغيرة والمتوسطة".</li>
+            </ul></dd>
+          <dt>ليه مهمة</dt><dd>أي زائر يشوف إيميل وهمي أو كلمة Testing هيحس إن الموقع مش جاهز أو مش رسمي، وده بيأثر على الثقة في الدفع.</dd>
+          <dt>الحل</dt><dd>من إعدادات الموقع في Odoo: اسم الموقع، وبيانات الشركة، واسم الصفحة في المنيو. ونكتب نص "معلومات عنا" حقيقي عن iLOCK.</dd>
+        </dl>
+        <span class="effort"><svg aria-hidden="true"><use href="#i-clock"/></svg>حوالي نص ساعة</span>
+      </div>
+      <div class="shots">
+        <figure class="shot"><button type="button" data-zoom="img/footer_contact.jpg" data-cap="بيانات التواصل في الفوتر"><img src="img/footer_contact.jpg" alt="الفوتر فيه إيميل ورقم تليفون وهميين" loading="lazy"></button><figcaption>الإيميل والرقم الموجودين دلوقتي</figcaption></figure>
+      </div>
+    </article>
+
+    <article class="f noimg" data-sev="crit">
+      <div>
+        <div class="tags"><span class="tag crit">عاجل</span><span class="tag">موبايل</span></div>
+        <h3>الفوتر بيظهر مرتين على الموبايل</h3>
+        <dl>
+          <dt>شفت إيه</dt><dd>على الموبايل، "روابط مفيدة" و"معلومات عنا" و"تواصل معنا" بيظهروا مرة، وبعدين بيتكرروا تاني تحت على طول.</dd>
+          <dt>ليه مهمة</dt><dd>الصفحة بتطول على الفاضي (8,187 بكسل على الموبايل)، وشكلها بيبان إن فيه غلطة.</dd>
+          <dt>الحل</dt><dd>غالبًا فيه قسم فوتر متحط في الصفحة نفسها غير الفوتر الأساسي. نشيله أو نخفيه على الموبايل.</dd>
+        </dl>
+        <span class="effort"><svg aria-hidden="true"><use href="#i-clock"/></svg>ربع ساعة</span>
+      </div>
+    </article>
+
+    <article class="f" data-sev="imp">
+      <div>
+        <div class="tags"><span class="tag imp">مهم</span><span class="tag">الهيكل</span></div>
+        <h3>نسختين من الصفحة، واحدة للموبايل وواحدة للكمبيوتر</h3>
+        <dl>
+          <dt>شفت إيه</dt><dd>من 21 قسم فيه 9 مخفيين، لأن كل جزء متعمل مرتين: نسخة تظهر على الكمبيوتر ونسخة على الموبايل. والنتيجة إن النسختين بقوا مختلفين:
+            <ul>
+              <li>"قادة الابتكارات في مصر" على الكمبيوتر، و<span class="ltr">Innovations Leaders in Egypt</span> بالإنجليزي على الموبايل.</li>
+              <li>"تسوق الآن" على الكمبيوتر، و"اشترِ الآن" على الموبايل.</li>
+              <li>"انتظر لتري" على الكمبيوتر، و"انتظر وراقب" على الموبايل.</li>
+              <li>"قريبًا" على الكمبيوتر، و"مزيد من التفاصيل" على الموبايل.</li>
+            </ul></dd>
+          <dt>ليه مهمة</dt><dd>أي تعديل لازم يتعمل مرتين، وسهل تنسى واحدة. وده غالبًا سبب أغلب مشاكل الموبايل.</dd>
+          <dt>الحل</dt><dd>على المدى القريب نوحّد الكلام في النسختين. وبعدين، لو ينفع، نخلي كل قسم واحد يتظبط لوحده على المقاسين بدل ما يبقى نسختين.</dd>
+        </dl>
+        <span class="effort"><svg aria-hidden="true"><use href="#i-clock"/></svg>ساعة للتوحيد، ويوم للدمج</span>
+      </div>
+      <div class="shots">
+        <figure class="shot"><button type="button" data-zoom="img/mob_english.jpg" data-cap="عنوان إنجليزي في الصفحة العربي على الموبايل"><img src="img/mob_english.jpg" alt="عنوان بالإنجليزي في الصفحة العربي على الموبايل" loading="lazy"></button><figcaption>عنوان إنجليزي في الصفحة العربي (موبايل)</figcaption></figure>
+      </div>
+    </article>
+
+    <article class="f" data-sev="imp">
+      <div>
+        <div class="tags"><span class="tag imp">مهم</span><span class="tag">المحتوى</span></div>
+        <h3>نفس الوصف ونفس الصورة لمنتجات مختلفة</h3>
+        <dl>
+          <dt>شفت إيه</dt><dd>تحت كل الكروت تقريبًا مكتوب "30 واط | شحن سريع | قوي"، حتى المشترك وموزع الطاقة والكابل. والمشترك الشوكو وموزع الطاقة العالمي معروضين بنفس الصورة بالظبط.</dd>
+          <dt>ليه مهمة</dt><dd>المشترك مش بيتوصف بالواط وسرعة الشحن. والزائر هيتلخبط لو شاف منتجين بنفس الشكل وأسماء مختلفة.</dd>
+          <dt>الحل</dt><dd>سطر واحد حقيقي لكل منتج، زي: "3 مخارج | حماية من زيادة الحمل | سلك 3 متر". وصورة لكل منتج.</dd>
+        </dl>
+        <span class="effort"><svg aria-hidden="true"><use href="#i-clock"/></svg>ساعة، بعد ما توصل الصور والمواصفات</span>
+      </div>
+      <div class="shots">
+        <figure class="shot"><button type="button" data-zoom="img/same_subtitle.jpg" data-cap="منتجين مختلفين بنفس الصورة والوصف"><img src="img/same_subtitle.jpg" alt="كارتين لمنتجين مختلفين بنفس الصورة ونفس الوصف" loading="lazy"></button></figure>
+      </div>
+    </article>
+
+    <article class="f" data-sev="imp">
+      <div>
+        <div class="tags"><span class="tag imp">مهم</span><span class="tag">المحتوى</span></div>
+        <h3>كارت "محول عالمي" متكرر مرتين</h3>
+        <dl>
+          <dt>شفت إيه</dt><dd>في قسم "انتظر لتري"، الكارتين عليهم نفس العنوان ونفس الوصف.</dd>
+          <dt>الحل</dt><dd>لو فيه منتجين جايين نكتب اسم كل واحد. لو واحد بس، نخليه كارت كبير واحد ونحط تحته "بلغني لما ينزل".</dd>
+        </dl>
+        <span class="effort"><svg aria-hidden="true"><use href="#i-clock"/></svg>ربع ساعة</span>
+      </div>
+      <div class="shots">
+        <figure class="shot"><button type="button" data-zoom="img/dup_cards.jpg" data-cap="كارت محول عالمي متكرر"><img src="img/dup_cards.jpg" alt="كارتين محول عالمي بنفس المحتوى" loading="lazy"></button></figure>
+      </div>
+    </article>
+
+    <article class="f noimg" data-sev="imp">
+      <div>
+        <div class="tags"><span class="tag imp">مهم</span><span class="tag">البيع</span></div>
+        <h3>مفيش ولا منتج بسعره في الصفحة الرئيسية</h3>
+        <dl>
+          <dt>شفت إيه</dt><dd>فيه عنوان "عروض | الأكثر مبيعًا" بس مفيش منتجات تحته، ومفيش ولا سعر في الصفحة كلها. مع إن سلة Odoo شغالة (فيه لينك <span class="ltr">/shop/cart</span>).</dd>
+          <dt>ليه مهمة</dt><dd>الزائر عايز يعرف "بكام؟" قبل أي حاجة. لو السعر مش ظاهر، ممكن يروح يشتري نفس المنتج من أمازون أو نون، وده مكسب أقل لـ iLOCK.</dd>
+          <dt>الحل</dt><dd>نحط تحت العنوان ده جزء "Products" الجاهز في Odoo، ونختار فيه 8 منتجات بالأسعار، وزرار "أضف للسلة"، وعلامة "جديد" أو "خصم". (فيه شكل مقترح تحت في قسم قبل وبعد.)</dd>
+        </dl>
+        <span class="effort"><svg aria-hidden="true"><use href="#i-clock"/></svg>ساعتين</span>
+      </div>
+    </article>
+
+    <article class="f noimg" data-sev="imp">
+      <div>
+        <div class="tags"><span class="tag imp">مهم</span><span class="tag">الفوتر</span></div>
+        <h3>لينكات الفوتر والسوشيال مش متظبطة</h3>
+        <dl>
+          <dt>شفت إيه</dt><dd>
+            <ul>
+              <li>"معلومات عنا" و"المنتجات" و"الخدمات" و"قانوني" لينكهم <span class="ltr">#</span>.</li>
+              <li>أيقونات فيسبوك وإكس ولينكدإن بتودّي على <span class="ltr">/website/social/...</span>، وده الإعداد الافتراضي، ومش واضح إنها متوصلة بحسابات iLOCK الحقيقية.</li>
+              <li>مفيش واتساب، ولا عنوان، ولا مواعيد عمل.</li>
+              <li>في آخر الصفحة مكتوب "مشغل بواسطة أودو" مع لينكين لموقع Odoo.</li>
+            </ul></dd>
+          <dt>الحل</dt><dd>نوصّل السوشيال من إعدادات الموقع، ونعمل صفحات بسيطة للسياسات (الاسترجاع والشحن والخصوصية)، ونزوّد زرار واتساب، ونشيل سطر Odoo لو الباقة بتسمح.</dd>
+        </dl>
+        <span class="effort"><svg aria-hidden="true"><use href="#i-clock"/></svg>ساعة (من غير كتابة صفحات السياسات)</span>
+      </div>
+    </article>
+
+    <article class="f noimg" data-sev="imp">
+      <div>
+        <div class="tags"><span class="tag imp">مهم</span><span class="tag">السرعة</span></div>
+        <h3>البانر بيظهر فاضي أول كام ثانية</h3>
+        <dl>
+          <dt>شفت إيه</dt><dd>أول ما الصفحة فتحت، مكان البانر فضل فاضي (أبيض على الكمبيوتر وغامق في المتصفح الصغير) لحد ما الصورة حمّلت. وكل صور الصفحة، حتى أول صورة في البانر، متعلم عليها "تتحمّل متأخر" (lazy).</dd>
+          <dt>الحل</dt><dd>أول صورة في البانر تتحمّل على طول من غير lazy، ونحط لون خلفية أصفر فاتح مكانها لحد ما تحمّل، ونصغّر حجمها للموبايل.</dd>
+        </dl>
+        <span class="effort"><svg aria-hidden="true"><use href="#i-clock"/></svg>ساعة</span>
+      </div>
+    </article>
+
+    <article class="f" data-sev="nice">
+      <div>
+        <div class="tags"><span class="tag nice">تحسين</span><span class="tag">الشكل</span></div>
+        <h3>الزراير صغيرة وبتضيع على الأصفر</h3>
+        <dl>
+          <dt>شفت إيه</dt><dd>كل الزراير (15 زرار) شكلها واحد: إطار رفيع من غير خلفية، وارتفاعها 38 بكسل. وعلى الخلفية الصفرا بالكاد باينة.</dd>
+          <dt>الحل</dt><dd>زرار أساسي أسود مليان وجواه كلام أصفر، ارتفاعه 48 بكسل، والشكل الحالي يفضل للأزرار الثانوية بس.</dd>
+        </dl>
+        <span class="effort"><svg aria-hidden="true"><use href="#i-clock"/></svg>نص ساعة (من إعدادات الثيم)</span>
+      </div>
+      <div class="shots">
+        <figure class="shot"><button type="button" data-zoom="img/button.jpg" data-cap="الزرار الحالي على خلفية صفرا"><img src="img/button.jpg" alt="زرار تسوق الآن بإطار رفيع على خلفية صفرا" loading="lazy"></button></figure>
+      </div>
+    </article>
+
+    <article class="f" data-sev="nice">
+      <div>
+        <div class="tags"><span class="tag nice">تحسين</span><span class="tag">الشكل</span><span class="tag">جوجل</span></div>
+        <h3>أسماء الأقسام بالإنجليزي وجوه الصورة</h3>
+        <dl>
+          <dt>شفت إيه</dt><dd>Extensions وElectric Accessories وPower Strips وMobile Accessories مكتوبين جوه الصورة نفسها، وبالإنجليزي في الصفحة العربي.</dd>
+          <dt>الحل</dt><dd>صورة المنتج من غير كلام، والاسم يتكتب نص عادي بالعربي: "وصلات"، "إكسسوارات كهربا"، "مشتركات"، "إكسسوارات موبايل". وجنبه عدد المنتجات.</dd>
+        </dl>
+        <span class="effort"><svg aria-hidden="true"><use href="#i-clock"/></svg>ساعة (محتاج صور من غير كلام)</span>
+      </div>
+      <div class="shots">
+        <figure class="shot"><button type="button" data-zoom="img/categories.jpg" data-cap="كروت الأقسام"><img src="img/categories.jpg" alt="أربع كروت أقسام بأسماء إنجليزي داخل الصور" loading="lazy"></button></figure>
+      </div>
+    </article>
+
+    <article class="f" data-sev="nice">
+      <div>
+        <div class="tags"><span class="tag nice">تحسين</span><span class="tag">الشكل</span></div>
+        <h3>لوجوهات أماكن البيع واخدة مساحة كبيرة</h3>
+        <dl>
+          <dt>شفت إيه</dt><dd>أربع مربعات كبيرة ملونة (B.Tech بالبنفسجي وأمازون بالكحلي ونون بالأصفر)، ولونهم بيشد العين بعيد عن iLOCK.</dd>
+          <dt>الحل</dt><dd>صف واحد رفيع فيه اللوجوهات رمادي بنفس المقاس، ولما الماوس يعدّي عليها تتلوّن، وكل لوجو يودّي على صفحة iLOCK في المتجر ده.</dd>
+        </dl>
+        <span class="effort"><svg aria-hidden="true"><use href="#i-clock"/></svg>ساعة</span>
+      </div>
+      <div class="shots">
+        <figure class="shot"><button type="button" data-zoom="img/logos.jpg" data-cap="لوجوهات أماكن البيع"><img src="img/logos.jpg" alt="أربع لوجوهات لمتاجر في مربعات ملونة كبيرة" loading="lazy"></button></figure>
+      </div>
+    </article>
+
+    <article class="f" data-sev="nice">
+      <div>
+        <div class="tags"><span class="tag nice">تحسين</span><span class="tag">الشكل</span></div>
+        <h3>أيقونات الثقة جاهزة من Odoo، وفيها دولار</h3>
+        <dl>
+          <dt>شفت إيه</dt><dd>أيقونات "إرجاع سهل" و"شحن مجاني" و"دفع آمن" و"جودة مضمونة" هي الرسومات الافتراضية بتاعة Odoo، وأيقونة الدفع عليها علامة $.</dd>
+          <dt>الحل</dt><dd>أيقونات خط بسيطة بنفس ستايل الموقع، ونكتب معلومة حقيقية: "استرجاع خلال 14 يوم" و"الدفع عند الاستلام" و"ضمان سنة". (الأرقام دي أمثلة، المظبوط منكم.)</dd>
+        </dl>
+        <span class="effort"><svg aria-hidden="true"><use href="#i-clock"/></svg>ساعة</span>
+      </div>
+      <div class="shots">
+        <figure class="shot"><button type="button" data-zoom="img/trust.jpg" data-cap="شريط الثقة الحالي"><img src="img/trust.jpg" alt="شريط أيقونات الشحن والدفع الحالي" loading="lazy"></button></figure>
+      </div>
+    </article>
+
+    <article class="f" data-sev="nice">
+      <div>
+        <div class="tags"><span class="tag nice">تحسين</span><span class="tag">المسافات</span></div>
+        <h3>مسافات فاضية كبيرة بين الأقسام</h3>
+        <dl>
+          <dt>شفت إيه</dt><dd>تحت البانر وحوالين "قادة الابتكارات في مصر" وقبل الفيديو فيه مساحات بيضا كبيرة. الصفحة طولها 7,265 بكسل على الكمبيوتر.</dd>
+          <dt>الحل</dt><dd>مسافة واحدة ثابتة بين كل قسم والتاني (مثلًا 96 بكسل على الكمبيوتر و56 على الموبايل)، وبكده الصفحة تقصر حوالي الربع.</dd>
+        </dl>
+        <span class="effort"><svg aria-hidden="true"><use href="#i-clock"/></svg>ساعة</span>
+      </div>
+      <div class="shots">
+        <figure class="shot"><button type="button" data-zoom="img/gap.jpg" data-cap="المسافة تحت البانر"><img src="img/gap.jpg" alt="مسافة فاضية كبيرة تحت البانر" loading="lazy"></button></figure>
+      </div>
+    </article>
+
+    <article class="f noimg" data-sev="nice">
+      <div>
+        <div class="tags"><span class="tag nice">تحسين</span><span class="tag">الشكل</span></div>
+        <h3>الفيديو خارج عرض الصفحة</h3>
+        <dl>
+          <dt>شفت إيه</dt><dd>فيديو يوتيوب واخد العرض كله تقريبًا (10 بكسل من كل ناحية)، وباقي الصفحة بعيدة عن الحافة 85 بكسل. وفوقه شريط يوتيوب بالعنوان والهاشتاجات.</dd>
+          <dt>الحل</dt><dd>ندخّله في نفس العرض، ونحط صورة غلاف (poster) من عندنا عليها زرار تشغيل أصفر، والفيديو يشتغل لما الزائر يدوس بس. وده كمان بيسرّع الصفحة.</dd>
+        </dl>
+        <span class="effort"><svg aria-hidden="true"><use href="#i-clock"/></svg>ساعة</span>
+      </div>
+    </article>
+
+    <article class="f noimg" data-sev="nice">
+      <div>
+        <div class="tags"><span class="tag nice">تحسين</span><span class="tag">المحتوى</span></div>
+        <h3>الأرقام والـ DISCOVER ممكن يبقوا أقوى</h3>
+        <dl>
+          <dt>شفت إيه</dt><dd>أرقام 2018 و+500 و+40 مكتوبة ثابتة على أبيض. وقسم DISCOVER حلو، بس عنوانه "تعرف علي..." (المفروض "على") وزراره مش بيودّي في حتة.</dd>
+          <dt>الحل</dt><dd>الأرقام تعدّ وهي بتظهر وتتحط على شريط أصفر. ونصلّح الإملا ونربط الزرار بصفحة "عن iLOCK".</dd>
+        </dl>
+        <span class="effort"><svg aria-hidden="true"><use href="#i-clock"/></svg>نص ساعة</span>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section id="ideas">
+  <div class="eyebrow">قبل وبعد</div>
+  <h2 class="sec-h">شكل مقترح لأربع حاجات</h2>
+  <p class="sec-p">دي مجرد أفكار سريعة عشان تتخيلوا الفرق، مش تصميم نهائي. الأسعار والأرقام متسابة فاضية لأني معرفهاش.</p>
+
+  <div class="ba">
+    <div class="pair">
+      <h3>كارت المنتج على الموبايل</h3>
+      <div class="sides">
+        <div class="side"><span class="k b">دلوقتي</span><div class="phone"><img src="img/mob_overlap1.jpg" alt="الكارت الحالي والكلام فوق الصورة"></div></div>
+        <div class="side"><span class="k a">مقترح</span>
+          <div class="phone"><div class="mcard">
+            <h4>شاحن مزدوج المنفذ</h4>
+            <p>USB-C + USB-A · شحن سريع</p>
+            <span class="cta">تسوق الآن</span>
+            <img src="img/charger.jpg" alt="">
+          </div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pair">
+      <h3>الزراير</h3>
+      <div class="sides">
+        <div class="side"><span class="k b">دلوقتي</span><div class="btnrow"><span class="b-old">تسوق الآن</span></div><span class="size">38px · إطار 1px · من غير خلفية</span></div>
+        <div class="side"><span class="k a">مقترح</span><div class="btnrow"><span class="b-new"><svg width="18" height="18" aria-hidden="true" style="color:#FFC928"><use href="#i-bag"/></svg>تسوق الآن</span><span class="b-sec">اعرف أكتر</span></div><span class="size">48px · أساسي مليان + ثانوي بإطار</span></div>
+      </div>
+    </div>
+
+    <div class="pair">
+      <h3>الأكثر مبيعًا، بالأسعار</h3>
+      <div class="pcards">
+        <div class="pc"><div class="im" style="position:relative"><span class="badge" style="top:0;right:0">جديد</span><img src="img/charger.jpg" alt=""></div><div class="tx"><b>شاحن مزدوج المنفذ</b><small>USB-C + USB-A</small><div class="pr"><span>— ج.م</span><i><svg aria-hidden="true"><use href="#i-bag"/></svg></i></div></div></div>
+        <div class="pc"><div class="im"><img src="img/charger.jpg" alt=""></div><div class="tx"><b>شاحن سريع 75 واط PD</b><small>3 منافذ</small><div class="pr"><span>— ج.م</span><i><svg aria-hidden="true"><use href="#i-bag"/></svg></i></div></div></div>
+        <div class="pc"><div class="im"><img src="img/charger.jpg" alt=""></div><div class="tx"><b>iLOCK Mini PRO</b><small>مضغوط وقوي</small><div class="pr"><span>— ج.م</span><i><svg aria-hidden="true"><use href="#i-bag"/></svg></i></div></div></div>
+      </div>
+      <p class="size">نفس الصورة متكررة هنا للتوضيح بس. في الموقع كل منتج هيبقى بصورته وسعره من Odoo.</p>
+    </div>
+
+    <div class="pair">
+      <h3>شريط الثقة</h3>
+      <div class="sides">
+        <div class="side"><span class="k b">دلوقتي</span><figure class="shot" style="width:100%"><img src="img/trust.jpg" alt="شريط الثقة الحالي"></figure></div>
+        <div class="side"><span class="k a">مقترح</span>
+          <div class="trust-new">
+            <div><svg aria-hidden="true"><use href="#i-cash"/></svg>الدفع عند الاستلام</div>
+            <div><svg aria-hidden="true"><use href="#i-truck"/></svg>شحن لكل المحافظات</div>
+            <div><svg aria-hidden="true"><use href="#i-return"/></svg>استرجاع خلال — يوم</div>
+            <div><svg aria-hidden="true"><use href="#i-shield"/></svg>ضمان iLOCK</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tech">
+  <div class="eyebrow">جوجل والتقنية</div>
+  <h2 class="sec-h">اللي جوجل بيشوفه</h2>
+  <p class="sec-p">حاجات مش باينة للزائر، بس بتفرق في ظهور الموقع في البحث وفي شكل اللينك لما يتبعت على واتساب أو فيسبوك.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>البند</th><th>دلوقتي</th><th>المقترح</th></tr></thead>
+      <tbody>
+        <tr><td>اسم الصفحة (title)</td><td><code>Home no code | Testing</code></td><td>iLOCK | شواحن ووصلات كهربا آمنة</td></tr>
+        <tr><td>وصف الصفحة</td><td class="bad">"هذه هي الصفحة الرئيسية للموقع الإلكتروني"</td><td>جملة فيها iLOCK والأمان والشحن السريع والتوصيل في مصر</td></tr>
+        <tr><td>عنوان H1</td><td class="bad">مفيش خالص (<span class="num">0</span>)</td><td>عنوان واحد رئيسي في البانر</td></tr>
+        <tr><td>عناوين H2</td><td><span class="num">38</span> عنوان، منهم <span class="num">5</span> فاضيين</td><td>عنوان لكل قسم بس، ومفيش عناوين فاضية</td></tr>
+        <tr><td>وصف الصور (alt)</td><td class="bad"><span class="num">25</span> من <span class="num">28</span> من غير وصف</td><td>وصف عربي قصير لكل صورة منتج</td></tr>
+        <tr><td>الرابط الأساسي</td><td><code>/ar/home-3</code></td><td>لما تتعتمد، تبقى هي الصفحة الرئيسية على <code>/ar</code></td></tr>
+        <tr><td>صورة المشاركة (OG)</td><td>اللوجو بس</td><td>صورة بانر 1200×630 بالمنتج واللوجو</td></tr>
+        <tr><td>السرعة</td><td>~<span class="num">1.4</span> ميجا · <span class="num">41</span> طلب · أول بايت <span class="num">0.6–2.2</span> ثانية</td><td>كويسة. نحسّن صورة البانر الأولى والفيديو بس</td></tr>
+        <tr><td>الصور المكسورة</td><td class="bad"><span class="num">2</span> صورة من غير مصدر</td><td>نشيلهم أو نحط الصورة الصح</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="plan">
+  <div class="eyebrow">خطة الشغل</div>
+  <h2 class="sec-h">لو هنبدأ، ده الترتيب اللي أقترحه</h2>
+  <p class="sec-p">المرحلة الأولى لوحدها هتحل أغلب اللي الزائر بيلاحظه. تقدروا تعلّموا على اللي خلص (العلامات بتتحفظ على جهازكم بس).</p>
+  <div class="road">
+    <div class="ph first">
+      <span class="n num">1</span>
+      <h3>تنضيف سريع</h3>
+      <span class="t">~ يوم شغل · في محرر Odoo</span>
+      <ul>
+        <li><input type="checkbox" id="t1"><label for="t1">نشيل Testing و"بدون كود" والبيانات الوهمية</label></li>
+        <li><input type="checkbox" id="t2"><label for="t2">نربط كل "تسوق الآن" بصفحة المنتج</label></li>
+        <li><input type="checkbox" id="t3"><label for="t3">نصلّح الكلام اللي فوق الصور في الموبايل</label></li>
+        <li><input type="checkbox" id="t4"><label for="t4">نشيل الفوتر المكرر</label></li>
+        <li><input type="checkbox" id="t5"><label for="t5">نوحّد كلام الموبايل والكمبيوتر</label></li>
+        <li><input type="checkbox" id="t6"><label for="t6">نصلّح الوصف والصور المتكررة</label></li>
+      </ul>
+    </div>
+    <div class="ph">
+      <span class="n num">2</span>
+      <h3>البيع والشكل</h3>
+      <span class="t">~ 2 لـ 3 أيام</span>
+      <ul>
+        <li><input type="checkbox" id="t7"><label for="t7">قسم الأكثر مبيعًا بالأسعار</label></li>
+        <li><input type="checkbox" id="t8"><label for="t8">زراير جديدة (أساسي + ثانوي)</label></li>
+        <li><input type="checkbox" id="t9"><label for="t9">مسافات موحّدة بين الأقسام</label></li>
+        <li><input type="checkbox" id="t10"><label for="t10">فوتر حقيقي + واتساب + سوشيال</label></li>
+        <li><input type="checkbox" id="t11"><label for="t11">كروت أقسام بأسماء عربي</label></li>
+      </ul>
+    </div>
+    <div class="ph">
+      <span class="n num">3</span>
+      <h3>التشطيب</h3>
+      <span class="t">~ يومين</span>
+      <ul>
+        <li><input type="checkbox" id="t12"><label for="t12">شريط ثقة وأيقونات جديدة</label></li>
+        <li><input type="checkbox" id="t13"><label for="t13">صف لوجوهات أماكن البيع</label></li>
+        <li><input type="checkbox" id="t14"><label for="t14">الفيديو بغلاف مخصوص</label></li>
+        <li><input type="checkbox" id="t15"><label for="t15">أرقام بتعدّ + حركة خفيفة</label></li>
+        <li><input type="checkbox" id="t16"><label for="t16">جوجل: العنوان والوصف والـ alt وصورة المشاركة</label></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="outro">
+    <div>
+      <h2>الخطوة الجاية، لو حابين</h2>
+      <p>أقدر أعمل تصميم كامل مقترح للصفحة الرئيسية بألوان iLOCK، على الكمبيوتر والموبايل، تشوفوه وتعلّقوا عليه قبل ما نلمس الموقع. ولو فيه أي ملاحظة شايفينها بشكل مختلف، قولولي وأعدّل.</p>
+    </div>
+    <ul>
+      <li>محتاج منكم: الأسعار، ومواصفات كل منتج، وبيانات التواصل الحقيقية</li>
+      <li>ولو ينفع: صور المنتجات من غير كلام عليها</li>
+      <li>ولينكات صفحات iLOCK على أمازون ونون وجوميا وB.Tech</li>
+    </ul>
+  </div>
+
+  <div class="foot">
+    <span>الفحص اتعمل يوم 24 سبتمبر 2026 على <span class="ltr">erp.ilock.eg/ar/home-3</span></span>
+    <span>شكرًا على وقتكم</span>
+  </div>
+</section>
+
+</div>
+
+<dialog id="lb" aria-label="صورة مكبرة">
+  <img id="lbimg" alt="">
+  <p id="lbcap"></p>
+  <form method="dialog"><button type="submit">قفل</button></form>
+</dialog>
+
+<script>
+(function(){
+  // severity filter
+  var chips=[].slice.call(document.querySelectorAll('.chip'));
+  var cards=[].slice.call(document.querySelectorAll('.f'));
+  chips.forEach(function(c){
+    c.addEventListener('click',function(){
+      var f=c.getAttribute('data-f');
+      chips.forEach(function(x){x.setAttribute('aria-pressed',String(x===c))});
+      cards.forEach(function(k){k.hidden=!(f==='all'||k.getAttribute('data-sev')===f)});
+    });
+  });
+
+  // lightbox
+  var lb=document.getElementById('lb'),im=document.getElementById('lbimg'),cap=document.getElementById('lbcap');
+  document.querySelectorAll('[data-zoom]').forEach(function(b){
+    b.addEventListener('click',function(){
+      im.src=b.getAttribute('data-zoom'); im.alt=b.getAttribute('data-cap')||''; cap.textContent=b.getAttribute('data-cap')||'';
+      if(lb.showModal){lb.showModal()}
+    });
+  });
+  lb.addEventListener('click',function(e){if(e.target===lb)lb.close()});
+
+  // roadmap checkboxes (per-viewer only)
+  var KEY='ilock-audit-tasks';
+  var saved={};
+  try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){}
+  document.querySelectorAll('.ph input[type=checkbox]').forEach(function(cb){
+    if(saved[cb.id])cb.checked=true;
+    cb.addEventListener('change',function(){
+      saved[cb.id]=cb.checked;
+      try{localStorage.setItem(KEY,JSON.stringify(saved))}catch(e){}
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
