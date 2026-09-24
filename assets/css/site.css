@@ -150,7 +150,7 @@ p{margin:0}
 .stage .tagcard{position:absolute;inset-inline-start:18px;bottom:18px;background:rgba(255,255,255,.94);color:var(--ink);border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow-m);max-width:calc(100% - 36px);backdrop-filter:blur(6px)}
 .stage .tagcard .t{display:grid;line-height:1.45}
 .stage .tagcard b{font-family:var(--display);font-weight:600;font-size:15px}
-.stage .tagcard span{font-family:var(--mono);font-size:13px;color:var(--ink-2)}
+.stage .tagcard .t span{font-family:var(--mono);font-size:13px;color:var(--ink-2)}
 .stage .dots{position:absolute;top:16px;inset-inline-end:16px;display:flex;gap:6px}
 .stage .dots button{width:30px;height:5px;border-radius:9px;border:0;background:rgba(27,19,25,.25);padding:0}
 .stage .dots button[aria-current="true"]{background:var(--ink)}
